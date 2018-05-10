@@ -63,3 +63,7 @@ This way, you can be in any directory and run this script to compress any pdf fi
 Many thanks to Dr. Haggen So for sharing the following link that inspired me to write this script:
 
 https://www.tjansson.dk/2012/04/compressing-pdfs-using-ghostscript-under-linux/
+
+This is an Open Source utility sponsored by 3DF Limited's Open Source Initiative:
+
+https://www.3df.com.hk

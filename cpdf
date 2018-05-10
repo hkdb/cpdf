@@ -1,0 +1,49 @@
+#!/usr/bin/python
+
+###############################################################
+### PROJECT:
+### cpdf - The PDF Compressor
+### SCRIPT:
+### cpdf
+### DESCRIPTION:
+### A script to make compressing pdf files more easily by
+### automating gs commands
+### LOCATION:
+### This should be placed in a bin dir of your choice
+### MAINTAINED BY:
+### hkdb <hkdb@3df.io>
+### ############################################################
+
+import os, datetime, sys, glob
+
+# Argument Handling
+if len(sys.argv) <= 1:
+    print "ERROR: This script only takes 3 specific arguments. Use the \"help\" argument to learn more."
+elif str(sys.argv[1]) == "help":
+    print "This is a script to compress a pdf file with the convention of: cpdf [type: screen, ebook, printer, prepress, or default] [input file name] [output file name] . To learn more about the different types, use the \"types\" flag (ie. cpdf types)"
+    sys.exit()
+elif str(sys.argv[1]) == "types":
+    print "screen - selects low-resolution output similar to the Acrobat Distiller \"Screen Optimized\" setting."
+    print "ebook - selects medium-resolution output similar to the Acrobat Distiller \"eBook\" setting."
+    print "printer - selects output similar to the Acrobat Distiller \"Print Optimized\" setting."
+    print "prepress - selects output similar to Acrobat Distiller \"Prepress Optimized\" setting."
+    print "default - selects output intended to be useful across a wide variety of uses, possibly at the expense of a larger output file."
+    sys.exit()
+elif len(sys.argv) != 4:
+    print "ERROR: This script only takes 3 specific arguments. Use the \"help\" argument to learn more."
+    sys.exit()
+elif str(sys.argv[1]) != "help" and str(sys.argv[1]) != "screen" and str(sys.argv[1]) != "ebook" and str(sys.argv[1]) != "printer" and str(sys.argv[1]) != "prepress" and str(sys.argv[1]) != "default":
+    print "ERROR: Incorrect compression type. Please use the \"help\" argument to learn more."
+    sys.exit()
+elif str(sys.argv[2]) == str(sys.argv[3]):
+    print "ERROR: The input file name must not be the same as the output file name. Please use the \"help\" argument to learn more."
+    sys.exit()
+elif str(sys.argv[1]) != "help" and str(sys.argv[2]) == None or str(sys.argv[3]) == None:
+    print "ERROR: Incorrect arguments. Please use the \"help\" argument to learn more."
+    sys.exit()
+else:
+    cType = str(sys.argv[1]) # Compression Type
+    inFile = str(sys.argv[2]) # Input File Name
+    outFile = str(sys.argv[3]) # Output File Name
+    cmmd = "gs -sDEVICE=pdfwrite -dCompatibilityLevel=1.6 -dPDFSETTINGS=/" + cType + " -dNOPAUSE -dQUIET -dBATCH -sOutputFile=" + "\"" + outFile + "\"" + " " + "\"" + inFile + "\""
+    os.system(cmmd)

@@ -52,6 +52,16 @@ hkdb@machine:~/test$
 ```
 Notice that compressed.pdf is 4M; the results from compressing a 31M pdf? I then opened up compressed.pdf and it still looked great!
 
+## Under the Hood
+
+It essentially takes your arguments and turns it into the following Ghostscript command:
+
+```
+gs -sDEVICE=pdfwrite -dCompatibilityLevel=1.6 -dPDFSETTINGS=/ebook
+-dNOPAUSE -dQUIET -dBATCH -sOutputFile=[compressed.pdf]
+"[input.pdf]"
+```
+
 ## Installation
 
 To make this script behave more like a command, move it to a bin directory of choice that's defined in your env.
@@ -66,4 +76,9 @@ https://www.tjansson.dk/2012/04/compressing-pdfs-using-ghostscript-under-linux/
 
 This is an Open Source utility sponsored by 3DF Limited's Open Source Initiative:
 
+https://osi.3df.io
 https://www.3df.com.hk
+
+## Want a graphical alternative instead?
+
+Check out [Densify](https://github.com/hkdb/densify), a GTK+ GUI Application written in Python that simplifies compressing PDF files with Ghostscript

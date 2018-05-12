@@ -68,6 +68,10 @@ To make this script behave more like a command, move it to a bin directory of ch
 
 This way, you can be in any directory and run this script to compress any pdf file without specifying the full path.
 
+## Disclaimer
+
+This application is maintained by volunteers and in no way do the maintainers make any guarantees. Please use at your own risk!
+
 ## Recognition
 
 Many thanks to Dr. Haggen So for sharing the following link that inspired me to write this script:

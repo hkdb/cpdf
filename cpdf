@@ -14,36 +14,93 @@
 ### hkdb <hkdb@3df.io>
 ### ############################################################
 
-import os, datetime, sys, glob
+import os, datetime, sys, glob, re
 
 # Argument Handling
 if len(sys.argv) <= 1:
-    print "ERROR: This script only takes 3 specific arguments. Use the \"help\" argument to learn more."
+    print "\nERROR: This script only takes 3 specific arguments. Use the \"help\" argument to learn more.\n"
 elif str(sys.argv[1]) == "help":
-    print "This is a script to compress a pdf file with the convention of: cpdf [type: screen, ebook, printer, prepress, or default] [input file name] [output file name] . To learn more about the different types, use the \"types\" flag (ie. cpdf types)"
+    print "\nThis is a script to compress a pdf file with the convention of: " + '\033[1;37m' + "cpdf [type: screen, ebook, printer, prepress, or default] [input file name] [output file name]" + '\033[0m' + ". To learn more about the different types, use the \"types\" flag (ie. cpdf types)\n"
     sys.exit()
 elif str(sys.argv[1]) == "types":
-    print "screen - selects low-resolution output similar to the Acrobat Distiller \"Screen Optimized\" setting."
-    print "ebook - selects medium-resolution output similar to the Acrobat Distiller \"eBook\" setting."
-    print "printer - selects output similar to the Acrobat Distiller \"Print Optimized\" setting."
-    print "prepress - selects output similar to Acrobat Distiller \"Prepress Optimized\" setting."
-    print "default - selects output intended to be useful across a wide variety of uses, possibly at the expense of a larger output file."
+    print "\n"
+    print '\033[1;37m' + "screen" + '\033[0m' + " - selects low-resolution output similar to the Acrobat Distiller \"Screen Optimized\" setting."
+    print '\033[1;37m' + "ebook" + '\033[0m' + " - selects medium-resolution output similar to the Acrobat Distiller \"eBook\" setting."
+    print '\033[1;37m' + "printer" + '\033[0m' + " - selects output similar to the Acrobat Distiller \"Print Optimized\" setting."
+    print '\033[1;37m' + "prepress" + '\033[0m' + " - selects output similar to Acrobat Distiller \"Prepress Optimized\" setting."
+    print '\033[1;37m' + "default" + '\033[0m' + " - selects output intended to be useful across a wide variety of uses, possibly at the expense of a larger output file."
+    print "\n"
     sys.exit()
 elif len(sys.argv) != 4:
-    print "ERROR: This script only takes 3 specific arguments. Use the \"help\" argument to learn more."
+    print "\n" + '\033[91m' + "ERROR:" + '\033[0m' + " This script only takes 3 specific arguments. Use the \"help\" argument to learn more.\n"
     sys.exit()
 elif str(sys.argv[1]) != "help" and str(sys.argv[1]) != "screen" and str(sys.argv[1]) != "ebook" and str(sys.argv[1]) != "printer" and str(sys.argv[1]) != "prepress" and str(sys.argv[1]) != "default":
-    print "ERROR: Incorrect compression type. Please use the \"help\" argument to learn more."
+    print "\n" + '\033[91m' + "ERROR:" + '\033[0m' + " Incorrect compression type. Please use the \"help\" argument to learn more.\n"
     sys.exit()
+elif not str(sys.argv[2]).endswith(".pdf"):
+    print "\n" + '\033[91m' + "ERROR:" + '\033[0m' + " The specified input file needs to be a pdf file. However, your file does not end with a \".pdf\" extension\n"
 elif str(sys.argv[2]) == str(sys.argv[3]):
-    print "ERROR: The input file name must not be the same as the output file name. Please use the \"help\" argument to learn more."
+    print "\n" + '\033[91m' + "ERROR:" + '\033[0m' + " The input file name must not be the same as the output file name. Please use the \"help\" argument to learn more.\n"
     sys.exit()
 elif str(sys.argv[1]) != "help" and str(sys.argv[2]) == None or str(sys.argv[3]) == None:
-    print "ERROR: Incorrect arguments. Please use the \"help\" argument to learn more."
+    print "\n" + '\033[91m' + "ERROR:" + '\033[0m' + " Incorrect arguments. Please use the \"help\" argument to learn more.\n"
     sys.exit()
 else:
     cType = str(sys.argv[1]) # Compression Type
     inFile = str(sys.argv[2]) # Input File Name
     outFile = str(sys.argv[3]) # Output File Name
-    cmmd = "gs -sDEVICE=pdfwrite -dCompatibilityLevel=1.6 -dPDFSETTINGS=/" + cType + " -dNOPAUSE -dQUIET -dBATCH -sOutputFile=" + "\"" + outFile + "\"" + " " + "\"" + inFile + "\""
+
+    # Check to make sure that the input file name is safe
+    if re.search('[\\\\\|:;\`]', inFile):
+        print "\n" + '\033[91m' + "ERROR:" + '\033[0m' + " Input file contains invalid characters such as / \\ : ; \`.... Exiting...\n"
+        sys.exit()
+
+    # Check to make sure that the output file name is safe
+    if re.search('[\\\\\|:;\`]', outFile):
+        print "\n" + '\033[91m' + "ERROR:" + '\033[0m' + " Output file contains invalid characters such as / \\ : ; \`.... Exiting...\n"
+        sys.exit()
+
+    # Check to make sure the user really wants to overwrite the existing file with the new output file and that the output file does in fact end with .pdf
+    if os.path.isfile(outFile):
+        if not outFile.endswith(".pdf"):
+            ask = "\n" + '\033[1;36m' + "WARNING:" + '\033[0m' + " \"" + outFile + "\" does not end with \".pdf\". Are you sure you want to continue? (y/n) "
+            confirm = raw_input(ask)
+            if confirm == "No" or confirm == "no" or confirm == "N" or confirm == "n":
+                print("\nGood catch huhn? Exiting...\n")
+                sys.exit()
+            elif confirm == "Yes" or confirm == "yes" or confirm == "Y" or confirm == "y":
+                ask = "\n" + '\033[1;36m' + "WARNING:" + '\033[0m' + " \"" + outFile + "\" already exists. Are you sure you want to overwrite it? (y/n) "
+                confirm = raw_input(ask)
+                if confirm == "No" or confirm == "no" or confirm == "N" or confirm == "n":
+                    print("\nGood catch huhn? Exiting...\n")
+                    sys.exit()
+                elif confirm == "Yes" or confirm == "yes" or confirm == "Y" or confirm == "y":
+                    cmmd = "gs -sDEVICE=pdfwrite -dCompatibilityLevel=1.6 -dPDFSETTINGS=/" + cType + " -dNOPAUSE -dQUIET -dBATCH -sOutputFile=" + "\"" + outFile + "\"" + " " + "\"" + inFile + "\""
+                    print("\n")
+                else:
+                    print("I don't understand your input. Exiting...")
+            else:
+                print("I don't understand your input. Exiting...\n")
+        else:
+            ask = "\n" + '\033[1;36m' + "WARNING:" + '\033[0m' + " \"" + outFile + "\" already exists. Are you sure you want to overwrite it? (y/n) "
+            confirm = raw_input(ask)
+            if confirm == "No" or confirm == "no" or confirm == "N" or confirm == "n":
+                print("\nGood catch huhn? Exiting...\n")
+                sys.exit()
+            elif confirm == "Yes" or confirm == "yes" or confirm == "Y" or confirm == "y":
+                cmmd = "gs -sDEVICE=pdfwrite -dCompatibilityLevel=1.6 -dPDFSETTINGS=/" + cType + " -dNOPAUSE -dQUIET -dBATCH -sOutputFile=" + "\"" + outFile + "\"" + " " + "\"" + inFile + "\""
+            else:
+                print("I don't understand your input. Exiting...\n")
+    else:
+        if not outFile.endswith(".pdf"):
+            ask = "\n\"" + outFile + "\" does not end with \".pdf\". Are you sure you want to continue? (y/n) "
+            confirm = raw_input(ask)
+            if confirm == "No" or confirm == "no" or confirm == "N" or confirm == "n":
+                print("\nGood catch huhn? Exiting...\n")
+                sys.exit()
+            elif confirm == "Yes" or confirm == "yes" or confirm == "Y" or confirm == "y":
+                    cmmd = "gs -sDEVICE=pdfwrite -dCompatibilityLevel=1.6 -dPDFSETTINGS=/" + cType + " -dNOPAUSE -dQUIET -dBATCH -sOutputFile=" + "\"" + outFile + "\"" + " " + "\"" + inFile + "\""
+            else:
+                print("I don't understand your input. Exiting...")
     os.system(cmmd)
+    print("\nCompressed!\n")

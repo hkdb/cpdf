@@ -1,4 +1,4 @@
-# cpdf v1.0
+# cPDF
 **maintained by:** hkdb \<<hkdb@3df.io>\><br />
 
 ## Description
@@ -6,7 +6,20 @@
 A Python script that simplifies compressing pdf files with gs.
 
 ## Change Log
-MAY 11th, 2018 - v1.0 Released
+
+### MAY 14th, 2018 - v1.1 Released - Butterfly
+
+Features:
+
+- Bolded and colored formating of output text to make it more readable
+- Added new lines bewteen each output to make it more readable
+- Added Error Handling (WARNING): Output file does not end with .pdf, verify with user that's really what they want
+- Added Error Handling (WARNING): Output file name matches a file in the output directory
+- Added Error Handling (ERROR): Unsafe input & output file names
+
+### MAY 11th, 2018 - v1.0 Released - Birth
+
+- The birth of cPDF!
 
 ## Usage Example
 
@@ -61,6 +74,26 @@ gs -sDEVICE=pdfwrite -dCompatibilityLevel=1.6 -dPDFSETTINGS=/ebook
 -dNOPAUSE -dQUIET -dBATCH -sOutputFile=[compressed.pdf]
 "[input.pdf]"
 ```
+## Error Handling
+
+Currently, if any of the below conditions are met, the script will print an error/warning message and exit. This is designed to prevent any dangerous execution of Ghostscript and to remind users in case they forget to input the command with the right convention. For the ones that are questionable, it will warn the user and provide a chance to cancel or confirm.
+
+Convention:
+
+- Less than 3 arguments given
+- Invalid compression type argument
+
+Ghostscript:
+
+- Input File Does Not End with .pdf
+- Input File and Output File are the same
+- Input File Name Contains Unsupported Characters(/\\:;\`)
+- Output File Name Contains Unsupported Characters(/\\:;\`)
+
+Questionable Conditions that the application will verify with User via A Dialog Message:
+
+- Output File does not End with .pdf, Verify with User That's Really What They Want
+- Output File Name Matches a File in the Output Directory
 
 ## Installation
 

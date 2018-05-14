@@ -5,6 +5,8 @@
 ### cpdf - The PDF Compressor
 ### SCRIPT:
 ### cpdf
+### VERSION:
+### v1.1.2
 ### DESCRIPTION:
 ### A script to make compressing pdf files more easily by
 ### automating gs commands
@@ -32,7 +34,7 @@ elif str(sys.argv[1]) == "types":
     print "\n"
     sys.exit()
 elif str(sys.argv[1]) == "version":
-    print '\033[1;37m' + "\ncPDF v1.1\n" + '\033[0m'
+    print '\033[1;37m' + "\ncPDF v1.1.2\n" + '\033[0m'
     sys.exit()
 elif len(sys.argv) != 4:
     print "\n" + '\033[91m' + "ERROR:" + '\033[0m' + " This script only takes 3 specific arguments. Use the \"help\" argument to learn more.\n"
@@ -109,6 +111,6 @@ else:
                 sys.exit()
         else:
             cmmd = "gs -sDEVICE=pdfwrite -dCompatibilityLevel=1.6 -dPDFSETTINGS=/" + cType + " -dNOPAUSE -dQUIET -dBATCH -sOutputFile=" + "\"" + outFile + "\"" + " " + "\"" + inFile + "\""
-            
+
     os.system(cmmd)
     print("\nCompressed!\n")

@@ -16,6 +16,7 @@ Features:
 - Added Error Handling (WARNING): Output file does not end with .pdf, verify with user that's really what they want
 - Added Error Handling (WARNING): Output file name matches a file in the output directory
 - Added Error Handling (ERROR): Unsafe input & output file names
+- Added a version check argument
 
 ### MAY 11th, 2018 - v1.0 Released - Birth
 
@@ -37,18 +38,22 @@ Help:
 
 ```
 hkdb@machine:~/test$ cpdf help
+
 This is a script to compress a pdf file with the convention of: cpdf [type: screen, ebook, printer, prepress, or default] [input file name] [output file name] . To learn more about the different types, use the "types" flag (ie. cpdf types)
+
 ```
 
 List the preset types of compression settings:
 
 ```
 hkdb@machine:~/test$ cpdf types
+
 screen - selects low-resolution output similar to the Acrobat Distiller "Screen Optimized" setting.
 ebook - selects medium-resolution output similar to the Acrobat Distiller "eBook" setting.
 printer - selects output similar to the Acrobat Distiller "Print Optimized" setting.
 prepress - selects output similar to Acrobat Distiller "Prepress Optimized" setting.
 default - selects output intended to be useful across a wide variety of uses, possibly at the expense of a larger output file.
+
 ```
 
 Compress:
@@ -64,6 +69,16 @@ drwxr-xr-x 94 hkdb hkdb 4.0K Apr 30 21:45 ..
 hkdb@machine:~/test$
 ```
 Notice that compressed.pdf is 4M; the results from compressing a 31M pdf? I then opened up compressed.pdf and it still looked great!
+
+Version Checker:
+
+```
+hkdb@machine:~/test$ cpdf version
+
+cPDF v1.1
+
+hkdb@machine:~/test$
+```
 
 ## Under the Hood
 

@@ -18,7 +18,7 @@ import os, datetime, sys, glob, re
 
 # Argument Handling
 if len(sys.argv) <= 1:
-    print "\nERROR: This script only takes 3 specific arguments. Use the \"help\" argument to learn more.\n"
+    print "\n" + '\033[1;37m' + "ERROR:" + '\033[0m' + "  This script only takes 3 specific arguments. Use the \"help\" argument to learn more.\n"
 elif str(sys.argv[1]) == "help":
     print "\nThis is a script to compress a pdf file with the convention of: " + '\033[1;37m' + "cpdf [type: screen, ebook, printer, prepress, or default] [input file name] [output file name]" + '\033[0m' + ". To learn more about the different types, use the \"types\" flag (ie. cpdf types)\n"
     sys.exit()
@@ -30,6 +30,9 @@ elif str(sys.argv[1]) == "types":
     print '\033[1;37m' + "prepress" + '\033[0m' + " - selects output similar to Acrobat Distiller \"Prepress Optimized\" setting."
     print '\033[1;37m' + "default" + '\033[0m' + " - selects output intended to be useful across a wide variety of uses, possibly at the expense of a larger output file."
     print "\n"
+    sys.exit()
+elif str(sys.argv[1]) == "version":
+    print '\033[1;37m' + "\ncPDF v1.1\n" + '\033[0m'
     sys.exit()
 elif len(sys.argv) != 4:
     print "\n" + '\033[91m' + "ERROR:" + '\033[0m' + " This script only takes 3 specific arguments. Use the \"help\" argument to learn more.\n"

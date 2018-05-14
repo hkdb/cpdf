@@ -94,6 +94,7 @@ else:
                 cmmd = "gs -sDEVICE=pdfwrite -dCompatibilityLevel=1.6 -dPDFSETTINGS=/" + cType + " -dNOPAUSE -dQUIET -dBATCH -sOutputFile=" + "\"" + outFile + "\"" + " " + "\"" + inFile + "\""
             else:
                 print("I don't understand your input. Exiting...\n")
+                sys.exit()
     else:
         if not outFile.endswith(".pdf"):
             ask = "\n\"" + outFile + "\" does not end with \".pdf\". Are you sure you want to continue? (y/n) "
@@ -105,5 +106,9 @@ else:
                     cmmd = "gs -sDEVICE=pdfwrite -dCompatibilityLevel=1.6 -dPDFSETTINGS=/" + cType + " -dNOPAUSE -dQUIET -dBATCH -sOutputFile=" + "\"" + outFile + "\"" + " " + "\"" + inFile + "\""
             else:
                 print("I don't understand your input. Exiting...")
+                sys.exit()
+        else:
+            cmmd = "gs -sDEVICE=pdfwrite -dCompatibilityLevel=1.6 -dPDFSETTINGS=/" + cType + " -dNOPAUSE -dQUIET -dBATCH -sOutputFile=" + "\"" + outFile + "\"" + " " + "\"" + inFile + "\""
+            
     os.system(cmmd)
     print("\nCompressed!\n")

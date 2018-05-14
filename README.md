@@ -7,6 +7,12 @@ A Python script that simplifies compressing pdf files with gs.
 
 ## Change Log
 
+### MAY 14th, 2018 - v1.1.1 Released - Butterfly - Hotfix
+
+Bug Fixes:
+
+- Did not include command building step for situations with no WARNINGS.
+
 ### MAY 14th, 2018 - v1.1 Released - Butterfly
 
 Features:

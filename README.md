@@ -80,6 +80,10 @@ cPDF v1.1
 hkdb@machine:~/test$
 ```
 
+As of v1.1, color coding certain output text has been added to improve readability:
+
+![colorcode](https://osi.3df.io/wp-content/uploads/2018/05/coloroutput.png "Color Coding")
+
 ## Under the Hood
 
 It essentially takes your arguments and turns it into the following Ghostscript command:

@@ -11,7 +11,7 @@ A Python script that simplifies compressing pdf files with gs.
 
 Bug Fixes:
 
-- Did not bump version number in version check function
+- Did not bump version number in version check function of v1.1.1
 
 Enhancement:
 

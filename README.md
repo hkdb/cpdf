@@ -11,6 +11,7 @@ A Python script that simplifies compressing pdf files with gs.
 
 Progress Bar:
 
+```
 ./cpdf ebook ~/Test/AppUserFlow_20180315.pdf ~/Test/compressed.pdf
 
 WARNING: "/home/hkdb/Test/compressed.pdf" already exists. Are you sure you want to overwrite it? (y/n) y
@@ -27,6 +28,7 @@ Compressed!
 
 AppUserFlow_20180315.pdf is 30MB in size.
 compressed.pdf is 4.0MB after compression.
+```
 
 ### MAY 15th, 2018 - v1.1.2 Released - Butterfly - Hotfix 2
 

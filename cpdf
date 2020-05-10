@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 
 ###############################################################
 ### PROJECT:
@@ -6,7 +6,7 @@
 ### SCRIPT:
 ### cpdf
 ### VERSION:
-### v1.1.2
+### v1.2
 ### DESCRIPTION:
 ### A script to make compressing pdf files more easily by
 ### automating gs commands
@@ -16,39 +16,39 @@
 ### hkdb <hkdb@3df.io>
 ### ############################################################
 
-import os, datetime, sys, glob, re
+import os, datetime, sys, glob, re, subprocess, pyprind, time
 
 # Argument Handling
 if len(sys.argv) <= 1:
-    print "\n" + '\033[1;37m' + "ERROR:" + '\033[0m' + "  This script only takes 3 specific arguments. Use the \"help\" argument to learn more.\n"
+    print("\n" + '\033[1;37m' + "ERROR:" + '\033[0m' + "  This script only takes 3 specific arguments. Use the \"help\" argument to learn more.\n")
 elif str(sys.argv[1]) == "help":
-    print "\nThis is a script to compress a pdf file with the convention of: " + '\033[1;37m' + "cpdf [type: screen, ebook, printer, prepress, or default] [input file name] [output file name]" + '\033[0m' + ". To learn more about the different types, use the \"types\" flag (ie. cpdf types)\n"
+    print("\nThis is a script to compress a pdf file with the convention of: " + '\033[1;37m' + "cpdf [type: screen, ebook, printer, prepress, or default] [input file name] [output file name]" + '\033[0m' + ". To learn more about the different types, use the \"types\" flag (ie. cpdf types)\n")
     sys.exit()
 elif str(sys.argv[1]) == "types":
-    print "\n"
-    print '\033[1;37m' + "screen" + '\033[0m' + " - selects low-resolution output similar to the Acrobat Distiller \"Screen Optimized\" setting."
-    print '\033[1;37m' + "ebook" + '\033[0m' + " - selects medium-resolution output similar to the Acrobat Distiller \"eBook\" setting."
-    print '\033[1;37m' + "printer" + '\033[0m' + " - selects output similar to the Acrobat Distiller \"Print Optimized\" setting."
-    print '\033[1;37m' + "prepress" + '\033[0m' + " - selects output similar to Acrobat Distiller \"Prepress Optimized\" setting."
-    print '\033[1;37m' + "default" + '\033[0m' + " - selects output intended to be useful across a wide variety of uses, possibly at the expense of a larger output file."
-    print "\n"
+    print("\n")
+    print('\033[1;37m' + "screen" + '\033[0m' + " - selects low-resolution output similar to the Acrobat Distiller \"Screen Optimized\" setting.")
+    print('\033[1;37m' + "ebook" + '\033[0m' + " - selects medium-resolution output similar to the Acrobat Distiller \"eBook\" setting.")
+    print('\033[1;37m' + "printer" + '\033[0m' + " - selects output similar to the Acrobat Distiller \"print(Optimized\" setting.")
+    print('\033[1;37m' + "prepress" + '\033[0m' + " - selects output similar to Acrobat Distiller \"Prepress Optimized\" setting.")
+    print('\033[1;37m' + "default" + '\033[0m' + " - selects output intended to be useful across a wide variety of uses, possibly at the expense of a larger output file.")
+    print("\n")
     sys.exit()
 elif str(sys.argv[1]) == "version":
-    print '\033[1;37m' + "\ncPDF v1.1.2\n" + '\033[0m'
+    print('\033[1;37m' + "\ncPDF v1.2\n" + '\033[0m')
     sys.exit()
 elif len(sys.argv) != 4:
-    print "\n" + '\033[91m' + "ERROR:" + '\033[0m' + " This script only takes 3 specific arguments. Use the \"help\" argument to learn more.\n"
+    print("\n" + '\033[91m' + "ERROR:" + '\033[0m' + " This script only takes 3 specific arguments. Use the \"help\" argument to learn more.\n")
     sys.exit()
 elif str(sys.argv[1]) != "help" and str(sys.argv[1]) != "screen" and str(sys.argv[1]) != "ebook" and str(sys.argv[1]) != "printer" and str(sys.argv[1]) != "prepress" and str(sys.argv[1]) != "default":
-    print "\n" + '\033[91m' + "ERROR:" + '\033[0m' + " Incorrect compression type. Please use the \"help\" argument to learn more.\n"
+    print("\n" + '\033[91m' + "ERROR:" + '\033[0m' + " Incorrect compression type. Please use the \"help\" argument to learn more.\n")
     sys.exit()
 elif not str(sys.argv[2]).endswith(".pdf"):
-    print "\n" + '\033[91m' + "ERROR:" + '\033[0m' + " The specified input file needs to be a pdf file. However, your file does not end with a \".pdf\" extension\n"
+    print("\n" + '\033[91m' + "ERROR:" + '\033[0m' + " The specified input file needs to be a pdf file. However, your file does not end with a \".pdf\" extension\n")
 elif str(sys.argv[2]) == str(sys.argv[3]):
-    print "\n" + '\033[91m' + "ERROR:" + '\033[0m' + " The input file name must not be the same as the output file name. Please use the \"help\" argument to learn more.\n"
+    print("\n" + '\033[91m' + "ERROR:" + '\033[0m' + " The input file name must not be the same as the output file name. Please use the \"help\" argument to learn more.\n")
     sys.exit()
 elif str(sys.argv[1]) != "help" and str(sys.argv[2]) == None or str(sys.argv[3]) == None:
-    print "\n" + '\033[91m' + "ERROR:" + '\033[0m' + " Incorrect arguments. Please use the \"help\" argument to learn more.\n"
+    print("\n" + '\033[91m' + "ERROR:" + '\033[0m' + " Incorrect arguments. Please use the \"help\" argument to learn more.\n")
     sys.exit()
 else:
     cType = str(sys.argv[1]) # Compression Type
@@ -57,25 +57,25 @@ else:
 
     # Check to make sure that the input file name is safe
     if re.search('[\\\\\|:;\`]', inFile):
-        print "\n" + '\033[91m' + "ERROR:" + '\033[0m' + " Input file contains invalid characters such as / \\ : ; \`.... Exiting...\n"
+        print("\n" + '\033[91m' + "ERROR:" + '\033[0m' + " Input file contains invalid characters such as / \\ : ; \`.... Exiting...\n")
         sys.exit()
 
     # Check to make sure that the output file name is safe
     if re.search('[\\\\\|:;\`]', outFile):
-        print "\n" + '\033[91m' + "ERROR:" + '\033[0m' + " Output file contains invalid characters such as / \\ : ; \`.... Exiting...\n"
+        print("\n" + '\033[91m' + "ERROR:" + '\033[0m' + " Output file contains invalid characters such as / \\ : ; \`.... Exiting...\n")
         sys.exit()
 
     # Check to make sure the user really wants to overwrite the existing file with the new output file and that the output file does in fact end with .pdf
     if os.path.isfile(outFile):
         if not outFile.endswith(".pdf"):
             ask = "\n" + '\033[1;36m' + "WARNING:" + '\033[0m' + " \"" + outFile + "\" does not end with \".pdf\". Are you sure you want to continue? (y/n) "
-            confirm = raw_input(ask)
+            confirm = input(ask)
             if confirm == "No" or confirm == "no" or confirm == "N" or confirm == "n":
                 print("\nGood catch huhn? Exiting...\n")
                 sys.exit()
             elif confirm == "Yes" or confirm == "yes" or confirm == "Y" or confirm == "y":
                 ask = "\n" + '\033[1;36m' + "WARNING:" + '\033[0m' + " \"" + outFile + "\" already exists. Are you sure you want to overwrite it? (y/n) "
-                confirm = raw_input(ask)
+                confirm = input(ask)
                 if confirm == "No" or confirm == "no" or confirm == "N" or confirm == "n":
                     print("\nGood catch huhn? Exiting...\n")
                     sys.exit()
@@ -88,7 +88,7 @@ else:
                 print("I don't understand your input. Exiting...\n")
         else:
             ask = "\n" + '\033[1;36m' + "WARNING:" + '\033[0m' + " \"" + outFile + "\" already exists. Are you sure you want to overwrite it? (y/n) "
-            confirm = raw_input(ask)
+            confirm = input(ask)
             if confirm == "No" or confirm == "no" or confirm == "N" or confirm == "n":
                 print("\nGood catch huhn? Exiting...\n")
                 sys.exit()
@@ -100,7 +100,7 @@ else:
     else:
         if not outFile.endswith(".pdf"):
             ask = "\n\"" + outFile + "\" does not end with \".pdf\". Are you sure you want to continue? (y/n) "
-            confirm = raw_input(ask)
+            confirm = input(ask)
             if confirm == "No" or confirm == "no" or confirm == "N" or confirm == "n":
                 print("\nGood catch huhn? Exiting...\n")
                 sys.exit()
@@ -112,5 +112,28 @@ else:
         else:
             cmmd = "gs -sDEVICE=pdfwrite -dCompatibilityLevel=1.6 -dPDFSETTINGS=/" + cType + " -dNOPAUSE -dQUIET -dBATCH -sOutputFile=" + "\"" + outFile + "\"" + " " + "\"" + inFile + "\""
 
-    os.system(cmmd)
+    # Run Ghostscript Command
+    process = subprocess.Popen(cmmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+
+    # Progress & Details
+    print("\n")
+    initial_size = os.path.getsize(inFile)
+    status = 0
+    n = int(initial_size*10)
+    # poll = process.poll()
+    bar = pyprind.ProgBar(n, title='Compressing...')
+    for i in range(n):
+        if process.poll() == None:
+            bar.update()
+            status = status + 1
+        else:
+            bar.update(n-status)
+            print(process.poll())
+            break
+    print(bar)
+    process.wait()
     print("\nCompressed!\n")
+    final_size = os.path.getsize(outFile)
+    inSize = str(initial_size / 1000000)
+    print(inFile + " is " + inSize + "MB in size.")
+    print(outFile + " is {0:.1f}MB after compression.\n".format(final_size / 1000000))

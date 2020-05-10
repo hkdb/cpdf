@@ -7,28 +7,31 @@ A Python script that simplifies compressing pdf files with gs.
 
 ## Change Log
 
-### JUL 29th, 2018 - Pre-Release
+### MAY 10th, 2020 - v1.2 Released - Dragonfly
 
-Progress Bar:
+Enhancements:
 
-```
-./cpdf ebook ~/Test/AppUserFlow_20180315.pdf ~/Test/compressed.pdf
+  - Use Python3 instead
+  - Progress Bar:
 
-WARNING: "/home/hkdb/Test/compressed.pdf" already exists. Are you sure you want to overwrite it? (y/n) y
+    ```
+    ./cpdf ebook ~/Test/AppUserFlow_20180315.pdf ~/Test/compressed.pdf
 
-Compressing...
-0% [##############################] 100% | ETA: 00:00:00
-Total time elapsed: 00:01:36
-Title: Compressing...
-  Started: 07/29/2018 20:45:50
-  Finished: 07/29/2018 20:47:26
-  Total time elapsed: 00:01:36
+    WARNING: "/home/hkdb/Test/compressed.pdf" already exists. Are you sure you want to overwrite it? (y/n) y
 
-Compressed!
+    Compressing...
+    0% [##############################] 100% | ETA: 00:00:00
+    Total time elapsed: 00:01:36
+    Title: Compressing...
+      Started: 07/29/2018 20:45:50
+      Finished: 07/29/2018 20:47:26
+      Total time elapsed: 00:01:36
 
-AppUserFlow_20180315.pdf is 30MB in size.
-compressed.pdf is 4.0MB after compression.
-```
+    Compressed!
+
+    AppUserFlow_20180315.pdf is 30MB in size.
+    compressed.pdf is 4.0MB after compression.
+    ```
 
 ### MAY 15th, 2018 - v1.1.2 Released - Butterfly - Hotfix 2
 

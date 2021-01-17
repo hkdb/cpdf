@@ -15,8 +15,13 @@
 ### MAINTAINED BY:
 ### hkdb <hkdb@3df.io>
 ### ############################################################
-
-import os, datetime, sys, glob, re, subprocess, pyprind, time
+import datetime
+import sys
+import glob 
+import re
+import subprocess
+import pyprind
+import time
 
 # Argument Handling
 if len(sys.argv) <= 1:

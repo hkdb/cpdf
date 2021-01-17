@@ -60,6 +60,9 @@ else:
     inFile = Path(sys.argv[2])# Input File Name
     outFile = Path(sys.argv[3]) # Output File Name
 
+    inFileAbsPath = str(inFile.resolve())
+    outFileAbsPath = str(outFile.resolve())
+
     # On windows, the default binary for ghostscript is called gswin64.exe. Because of this
     # we need to check on which platform we are and set the executables name appropriately. 
     ghostScriptBin = 'gswin64.exe' if os.name == 'nt' else 'gs'
@@ -89,7 +92,7 @@ else:
                     print("\nGood catch huhn? Exiting...\n")
                     sys.exit()
                 elif confirm == "Yes" or confirm == "yes" or confirm == "Y" or confirm == "y":
-                    cmmd = ghostScriptBin + " -sDEVICE=pdfwrite -dCompatibilityLevel=1.6 -dPDFSETTINGS=/" + cType + " -dNOPAUSE -dQUIET -dBATCH -sOutputFile=" + "\"" + outFile + "\"" + " " + "\"" + inFile.absolute() + "\""
+                    cmmd = ghostScriptBin + " -sDEVICE=pdfwrite -dCompatibilityLevel=1.6 -dPDFSETTINGS=/" + cType + " -dNOPAUSE -dQUIET -dBATCH -sOutputFile=" + "\"" + outFileAbsPath + "\"" + " " + "\"" + inFileAbsPath + "\""
                     print("\n")
                 else:
                     print("I don't understand your input. Exiting...")
@@ -102,7 +105,7 @@ else:
                 print("\nGood catch huhn? Exiting...\n")
                 sys.exit()
             elif confirm == "Yes" or confirm == "yes" or confirm == "Y" or confirm == "y":
-                cmmd = ghostScriptBin + " -sDEVICE=pdfwrite -dCompatibilityLevel=1.6 -dPDFSETTINGS=/" + cType + " -dNOPAUSE -dQUIET -dBATCH -sOutputFile=" + "\"" + str(outFile.resolve()) + "\"" + " " + "\"" + str(inFile.resolve()) + "\""
+                cmmd = ghostScriptBin + " -sDEVICE=pdfwrite -dCompatibilityLevel=1.6 -dPDFSETTINGS=/" + cType + " -dNOPAUSE -dQUIET -dBATCH -sOutputFile=" + "\"" + outFileAbsPath + "\"" + " " + "\"" + inFileAbsPath + "\""
             else:
                 print("I don't understand your input. Exiting...\n")
                 sys.exit()
@@ -114,19 +117,19 @@ else:
                 print("\nGood catch huhn? Exiting...\n")
                 sys.exit()
             elif confirm == "Yes" or confirm == "yes" or confirm == "Y" or confirm == "y":
-                    cmmd = ghostScriptBin + " -sDEVICE=pdfwrite -dCompatibilityLevel=1.6 -dPDFSETTINGS=/" + cType + " -dNOPAUSE -dQUIET -dBATCH -sOutputFile=" + "\"" + str(outFile.resolve()) + "\"" + " " + "\"" + str(inFile.resolve()) + "\""
+                    cmmd = ghostScriptBin + " -sDEVICE=pdfwrite -dCompatibilityLevel=1.6 -dPDFSETTINGS=/" + cType + " -dNOPAUSE -dQUIET -dBATCH -sOutputFile=" + "\"" + outFileAbsPath + "\"" + " " + "\"" + inFileAbsPath + "\""
             else:
                 print("I don't understand your input. Exiting...")
                 sys.exit()
         else:
-            cmmd = ghostScriptBin + " -sDEVICE=pdfwrite -dCompatibilityLevel=1.6 -dPDFSETTINGS=/" + cType + " -dNOPAUSE -dQUIET -dBATCH -sOutputFile=" + "\"" + str(outFile.resolve()) + "\"" + " " + "\"" + str(inFile.resolve()) + "\""
+            cmmd = ghostScriptBin + " -sDEVICE=pdfwrite -dCompatibilityLevel=1.6 -dPDFSETTINGS=/" + cType + " -dNOPAUSE -dQUIET -dBATCH -sOutputFile=" + "\"" + outFileAbsPath + "\"" + " " + "\"" + inFileAbsPath + "\""
 
     # Run Ghostscript Command
     process = subprocess.Popen(cmmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
 
     # Progress & Details
     print("\n")
-    initial_size = os.path.getsize(inFile.absolute())
+    initial_size = os.path.getsize(inFile.resolve())
     status = 0
     n = int(initial_size*10)
     # poll = process.poll()

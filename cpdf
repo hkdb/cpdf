@@ -15,13 +15,13 @@
 ### MAINTAINED BY:
 ### hkdb <hkdb@3df.io>
 ### ############################################################
-import datetime
 import sys
-import glob 
+import os
 import re
 import subprocess
 import pyprind
-import time
+
+from pathlib import Path
 
 # Argument Handling
 if len(sys.argv) <= 1:
@@ -57,72 +57,76 @@ elif str(sys.argv[1]) != "help" and str(sys.argv[2]) == None or str(sys.argv[3])
     sys.exit()
 else:
     cType = str(sys.argv[1]) # Compression Type
-    inFile = str(sys.argv[2]) # Input File Name
-    outFile = str(sys.argv[3]) # Output File Name
+    inFile = Path(sys.argv[2])# Input File Name
+    outFile = Path(sys.argv[3]) # Output File Name
+
+    # On windows, the default binary for ghostscript is called gswin64.exe. Because of this
+    # we need to check on which platform we are and set the executables name appropriately. 
+    ghostScriptBin = 'gswin64.exe' if os.name == 'nt' else 'gs'
 
     # Check to make sure that the input file name is safe
-    if re.search('[\\\\\|:;\`]', inFile):
-        print("\n" + '\033[91m' + "ERROR:" + '\033[0m' + " Input file contains invalid characters such as / \\ : ; \`.... Exiting...\n")
-        sys.exit()
+    #if re.search('[\\\\\|:;\`]', inFile):
+    #    print("\n" + '\033[91m' + "ERROR:" + '\033[0m' + " Input file contains invalid characters such as / \\ : ; \`.... Exiting...\n")
+    #    sys.exit()
 
     # Check to make sure that the output file name is safe
-    if re.search('[\\\\\|:;\`]', outFile):
-        print("\n" + '\033[91m' + "ERROR:" + '\033[0m' + " Output file contains invalid characters such as / \\ : ; \`.... Exiting...\n")
-        sys.exit()
+    #if re.search('[\\\\\|:;\`]', outFile):
+    #    print("\n" + '\033[91m' + "ERROR:" + '\033[0m' + " Output file contains invalid characters such as / \\ : ; \`.... Exiting...\n")
+    #    sys.exit()
 
     # Check to make sure the user really wants to overwrite the existing file with the new output file and that the output file does in fact end with .pdf
-    if os.path.isfile(outFile):
-        if not outFile.endswith(".pdf"):
-            ask = "\n" + '\033[1;36m' + "WARNING:" + '\033[0m' + " \"" + outFile + "\" does not end with \".pdf\". Are you sure you want to continue? (y/n) "
+    if outFile.is_file():
+        if outFile.suffix != ".pdf":
+            ask = "\n" + '\033[1;36m' + "WARNING:" + '\033[0m' + " \"" + outFile.name + "\" does not end with \".pdf\". Are you sure you want to continue? (y/n) "
             confirm = input(ask)
             if confirm == "No" or confirm == "no" or confirm == "N" or confirm == "n":
                 print("\nGood catch huhn? Exiting...\n")
                 sys.exit()
             elif confirm == "Yes" or confirm == "yes" or confirm == "Y" or confirm == "y":
-                ask = "\n" + '\033[1;36m' + "WARNING:" + '\033[0m' + " \"" + outFile + "\" already exists. Are you sure you want to overwrite it? (y/n) "
+                ask = "\n" + '\033[1;36m' + "WARNING:" + '\033[0m' + " \"" + outFile.name + "\" already exists. Are you sure you want to overwrite it? (y/n) "
                 confirm = input(ask)
                 if confirm == "No" or confirm == "no" or confirm == "N" or confirm == "n":
                     print("\nGood catch huhn? Exiting...\n")
                     sys.exit()
                 elif confirm == "Yes" or confirm == "yes" or confirm == "Y" or confirm == "y":
-                    cmmd = "gs -sDEVICE=pdfwrite -dCompatibilityLevel=1.6 -dPDFSETTINGS=/" + cType + " -dNOPAUSE -dQUIET -dBATCH -sOutputFile=" + "\"" + outFile + "\"" + " " + "\"" + inFile + "\""
+                    cmmd = ghostScriptBin + " -sDEVICE=pdfwrite -dCompatibilityLevel=1.6 -dPDFSETTINGS=/" + cType + " -dNOPAUSE -dQUIET -dBATCH -sOutputFile=" + "\"" + outFile + "\"" + " " + "\"" + inFile.absolute() + "\""
                     print("\n")
                 else:
                     print("I don't understand your input. Exiting...")
             else:
                 print("I don't understand your input. Exiting...\n")
         else:
-            ask = "\n" + '\033[1;36m' + "WARNING:" + '\033[0m' + " \"" + outFile + "\" already exists. Are you sure you want to overwrite it? (y/n) "
+            ask = "\n" + '\033[1;36m' + "WARNING:" + '\033[0m' + " \"" + outFile.name + "\" already exists. Are you sure you want to overwrite it? (y/n) "
             confirm = input(ask)
             if confirm == "No" or confirm == "no" or confirm == "N" or confirm == "n":
                 print("\nGood catch huhn? Exiting...\n")
                 sys.exit()
             elif confirm == "Yes" or confirm == "yes" or confirm == "Y" or confirm == "y":
-                cmmd = "gs -sDEVICE=pdfwrite -dCompatibilityLevel=1.6 -dPDFSETTINGS=/" + cType + " -dNOPAUSE -dQUIET -dBATCH -sOutputFile=" + "\"" + outFile + "\"" + " " + "\"" + inFile + "\""
+                cmmd = ghostScriptBin + " -sDEVICE=pdfwrite -dCompatibilityLevel=1.6 -dPDFSETTINGS=/" + cType + " -dNOPAUSE -dQUIET -dBATCH -sOutputFile=" + "\"" + str(outFile.resolve()) + "\"" + " " + "\"" + str(inFile.resolve()) + "\""
             else:
                 print("I don't understand your input. Exiting...\n")
                 sys.exit()
     else:
-        if not outFile.endswith(".pdf"):
-            ask = "\n\"" + outFile + "\" does not end with \".pdf\". Are you sure you want to continue? (y/n) "
+        if outFile.suffix != ".pdf":
+            ask = "\n\"" + outFile.name + "\" does not end with \".pdf\". Are you sure you want to continue? (y/n) "
             confirm = input(ask)
             if confirm == "No" or confirm == "no" or confirm == "N" or confirm == "n":
                 print("\nGood catch huhn? Exiting...\n")
                 sys.exit()
             elif confirm == "Yes" or confirm == "yes" or confirm == "Y" or confirm == "y":
-                    cmmd = "gs -sDEVICE=pdfwrite -dCompatibilityLevel=1.6 -dPDFSETTINGS=/" + cType + " -dNOPAUSE -dQUIET -dBATCH -sOutputFile=" + "\"" + outFile + "\"" + " " + "\"" + inFile + "\""
+                    cmmd = ghostScriptBin + " -sDEVICE=pdfwrite -dCompatibilityLevel=1.6 -dPDFSETTINGS=/" + cType + " -dNOPAUSE -dQUIET -dBATCH -sOutputFile=" + "\"" + str(outFile.resolve()) + "\"" + " " + "\"" + str(inFile.resolve()) + "\""
             else:
                 print("I don't understand your input. Exiting...")
                 sys.exit()
         else:
-            cmmd = "gs -sDEVICE=pdfwrite -dCompatibilityLevel=1.6 -dPDFSETTINGS=/" + cType + " -dNOPAUSE -dQUIET -dBATCH -sOutputFile=" + "\"" + outFile + "\"" + " " + "\"" + inFile + "\""
+            cmmd = ghostScriptBin + " -sDEVICE=pdfwrite -dCompatibilityLevel=1.6 -dPDFSETTINGS=/" + cType + " -dNOPAUSE -dQUIET -dBATCH -sOutputFile=" + "\"" + str(outFile.resolve()) + "\"" + " " + "\"" + str(inFile.resolve()) + "\""
 
     # Run Ghostscript Command
     process = subprocess.Popen(cmmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
 
     # Progress & Details
     print("\n")
-    initial_size = os.path.getsize(inFile)
+    initial_size = os.path.getsize(inFile.absolute())
     status = 0
     n = int(initial_size*10)
     # poll = process.poll()
@@ -138,7 +142,7 @@ else:
     print(bar)
     process.wait()
     print("\nCompressed!\n")
-    final_size = os.path.getsize(outFile)
+    final_size = os.path.getsize(outFile.resolve())
     inSize = str(initial_size / 1000000)
-    print(inFile + " is " + inSize + "MB in size.")
-    print(outFile + " is {0:.1f}MB after compression.\n".format(final_size / 1000000))
+    print(inFile.name + " is " + inSize + "MB in size.")
+    print(outFile.name + " is {0:.1f}MB after compression.\n".format(final_size / 1000000))

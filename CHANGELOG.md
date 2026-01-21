@@ -5,6 +5,8 @@
 - Uses command list instead to avoid shell injection (Security)
 - Updated install.sh for a smoother installation experience 
 - Build binary and upload to release with Github Actions to alleviate pyprind dependency issues - [#6](https://github.com/hkdb/cpdf/issues/6)
+- Added `install.bat` for Windows installation
+- Streamlined installation with curl method
 
 
 ### JUNE 24th, 2024 - v1.3 Released - Bee

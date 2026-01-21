@@ -142,7 +142,7 @@ jobs:
           path: dist/cpdf.exe
 
   build-macos-intel:
-    runs-on: macos-13
+    runs-on: macos-15-intel
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -173,7 +173,7 @@ jobs:
           path: dist/cpdf
 
   build-macos-arm:
-    runs-on: macos-latest
+    runs-on: macos-15
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -214,10 +214,10 @@ jobs:
         with:
           usesh: true
           prepare: |
-            pkg install -y python312 py312-pip patchelf
+            pkg install -y python311 py311-pip patchelf
           run: |
-            python3.12 -m pip install --user nuitka pyprind
-            python3.12 -m nuitka \
+            python3.11 -m pip install --user --break-system-packages nuitka pyprind
+            python3.11 -m nuitka \
               --onefile \
               --output-dir=dist \
               --output-filename=cpdf \
@@ -242,10 +242,10 @@ jobs:
           usesh: true
           arch: arm64
           prepare: |
-            pkg install -y python312 py312-pip patchelf
+            pkg install -y python311 py311-pip patchelf
           run: |
-            python3.12 -m pip install --user nuitka pyprind
-            python3.12 -m nuitka \
+            python3.11 -m pip install --user --break-system-packages nuitka pyprind
+            python3.11 -m nuitka \
               --onefile \
               --output-dir=dist \
               --output-filename=cpdf \

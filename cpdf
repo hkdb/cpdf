@@ -6,7 +6,7 @@
 ### SCRIPT:
 ### cpdf
 ### VERSION:
-### v1.3
+### v2.0
 ### DESCRIPTION:
 ### A script to make compressing pdf files more easily by
 ### automating gs commands
@@ -17,6 +17,8 @@
 ### ############################################################
 
 import os, datetime, sys, glob, re, subprocess, pyprind, time
+
+VERSION = "v2.0"
 
 # Argument Handling
 if len(sys.argv) <= 1:
@@ -34,7 +36,7 @@ elif str(sys.argv[1]) == "types":
     print("\n")
     sys.exit()
 elif str(sys.argv[1]) == "version":
-    print('\033[1;37m' + "\ncPDF v1.3\n" + '\033[0m')
+    print('\033[1;37m' + "\ncPDF " + VERSION + "\n" + '\033[0m')
     sys.exit()
 elif len(sys.argv) != 4:
     print("\n" + '\033[91m' + "ERROR:" + '\033[0m' + " This script only takes 3 specific arguments. Use the \"help\" argument to learn more.\n")
@@ -86,12 +88,13 @@ else:
                     print("\nGood catch huhn? Exiting...\n")
                     sys.exit()
                 elif confirm == "Yes" or confirm == "yes" or confirm == "Y" or confirm == "y":
-                    cmmd = "gs -sDEVICE=pdfwrite -dCompatibilityLevel=1.6 -dPDFSETTINGS=/" + cType + " -dNOPAUSE -dQUIET -dBATCH -sOutputFile=" + "\"" + outFile + "\"" + " " + "\"" + inFile + "\""
                     print("\n")
                 else:
                     print("I don't understand your input. Exiting...")
+                    sys.exit()
             else:
                 print("I don't understand your input. Exiting...\n")
+                sys.exit()
         else:
             ask = "\n" + '\033[1;36m' + "WARNING:" + '\033[0m' + " \"" + outFile + "\" already exists. Are you sure you want to overwrite it? (y/n) "
             confirm = input(ask)
@@ -99,7 +102,7 @@ else:
                 print("\nGood catch huhn? Exiting...\n")
                 sys.exit()
             elif confirm == "Yes" or confirm == "yes" or confirm == "Y" or confirm == "y":
-                cmmd = "gs -sDEVICE=pdfwrite -dCompatibilityLevel=1.6 -dPDFSETTINGS=/" + cType + " -dNOPAUSE -dQUIET -dBATCH -sOutputFile=" + "\"" + outFile + "\"" + " " + "\"" + inFile + "\""
+                pass
             else:
                 print("I don't understand your input. Exiting...\n")
                 sys.exit()
@@ -111,15 +114,26 @@ else:
                 print("\nGood catch huhn? Exiting...\n")
                 sys.exit()
             elif confirm == "Yes" or confirm == "yes" or confirm == "Y" or confirm == "y":
-                    cmmd = "gs -sDEVICE=pdfwrite -dCompatibilityLevel=1.6 -dPDFSETTINGS=/" + cType + " -dNOPAUSE -dQUIET -dBATCH -sOutputFile=" + "\"" + outFile + "\"" + " " + "\"" + inFile + "\""
+                pass
             else:
                 print("I don't understand your input. Exiting...")
                 sys.exit()
-        else:
-            cmmd = "gs -sDEVICE=pdfwrite -dCompatibilityLevel=1.6 -dPDFSETTINGS=/" + cType + " -dNOPAUSE -dQUIET -dBATCH -sOutputFile=" + "\"" + outFile + "\"" + " " + "\"" + inFile + "\""
+
+    # Build gs command as list (safer - no shell injection possible)
+    cmmd = [
+        'gs',
+        '-sDEVICE=pdfwrite',
+        '-dCompatibilityLevel=1.6',
+        f'-dPDFSETTINGS=/{cType}',
+        '-dNOPAUSE',
+        '-dQUIET',
+        '-dBATCH',
+        f'-sOutputFile={outFile}',
+        inFile
+    ]
 
     # Run Ghostscript Command
-    process = subprocess.Popen(cmmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+    process = subprocess.Popen(cmmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
 
     # Progress & Details
     print("\n")

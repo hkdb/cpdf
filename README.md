@@ -5,6 +5,7 @@
 
 A Python script that simplifies compressing pdf files with gs.
 
+
 ## Usage Example
 
 Check file size of test.pdf:
@@ -64,7 +65,7 @@ Version Checker:
 ```
 hkdb@machine:~/test$ cpdf version
 
-cPDF v1.3
+cPDF v2.0
 
 hkdb@machine:~/test$
 ```
@@ -72,6 +73,7 @@ hkdb@machine:~/test$
 As of v1.1, color coding certain output text has been added to improve readability:
 
 ![colorcode](https://osi.3df.io/wp-content/uploads/2018/05/coloroutput.png "Color Coding")
+
 
 ## Under the Hood
 
@@ -82,6 +84,8 @@ gs -sDEVICE=pdfwrite -dCompatibilityLevel=1.6 -dPDFSETTINGS=/ebook
 -dNOPAUSE -dQUIET -dBATCH -sOutputFile=[compressed.pdf]
 "[input.pdf]"
 ```
+
+
 ## Error Handling
 
 Currently, if any of the below conditions are met, the script will print an error/warning message and exit. This is designed to prevent any dangerous execution of Ghostscript and to remind users in case they forget to input the command with the right convention. For the ones that are questionable, it will warn the user and provide a chance to cancel or confirm.
@@ -103,94 +107,32 @@ Questionable Conditions that the application will verify with User via A Dialog 
 - Output File does not End with .pdf, Verify with User That's Really What They Want
 - Output File Name Matches a File in the Output Directory
 
+
 ## Installation
 
-To make this script behave more like a command, copy cpdf to a bin directory of choice that's defined in your $PATH.
+Linux / Mac / FreeBSD:
 
-This way, you can be in any directory and run this script to compress any pdf file without specifying the full path.
-
-If you are on Linux, *BSD, or Mac, you can also run the install script:
-
+```bash
+curl -sL https://github.com/hkdb/cpdf/releases/latest/download/install.sh | bash
 ```
-git clone https://github.com/hkdb/cpdf.git
-cd cpdf
-./install.sh
+You will still have to manually ensure `~/.local/bin` is in $PATH
+
+Windows:
+
+```powershell
+Invoke-WebRequest -Uri "https://github.com/hkdb/cpdf/releases/latest/download/install.bat" -OutFile "install.bat"; .\install.bat
 ```
-You will still have to manually ensure ~/.local/bin is in $PATH
 
 
-## Change Log
+## Changelog
 
-### JUNE 24th, 2024 - v1.3 Released - Bee
+See [CHANGELOG.md](CHANGELOG.md)
 
-- Use /usr/bin/env python3 header instead for better compatibility
-- Added a check for whether or not the input file exists
-- Allow for full path to be specified for both input and output file
-- Adjusted illegal characters
-- Adjusted help output to be more readable
-- Added install script for Linux, *BSD, macos
-
- 
-### MAY 10th, 2020 - v1.2 Released - Dragonfly
-
-Enhancements:
-
-  - Use Python3 instead
-  - Progress Bar:
-
-    ```
-    ./cpdf ebook ~/Test/AppUserFlow_20180315.pdf ~/Test/compressed.pdf
-
-    WARNING: "/home/hkdb/Test/compressed.pdf" already exists. Are you sure you want to overwrite it? (y/n) y
-
-    Compressing...
-    0% [##############################] 100% | ETA: 00:00:00
-    Total time elapsed: 00:01:36
-    Title: Compressing...
-      Started: 07/29/2018 20:45:50
-      Finished: 07/29/2018 20:47:26
-      Total time elapsed: 00:01:36
-
-    Compressed!
-
-    AppUserFlow_20180315.pdf is 30MB in size.
-    compressed.pdf is 4.0MB after compression.
-    ```
-
-### MAY 15th, 2018 - v1.1.2 Released - Butterfly - Hotfix 2
-
-Bug Fixes:
-
-- Did not bump version number in version check function of v1.1.1
-
-Enhancement:
-
-- Added version number in header comment of code
-
-### MAY 14th, 2018 - v1.1.1 Released - Butterfly - Hotfix
-
-Bug Fixes:
-
-- Did not include command building step for situations with no WARNINGS.
-
-### MAY 14th, 2018 - v1.1 Released - Butterfly
-
-Features:
-
-- Bolded and colored formating of output text to make it more readable
-- Added new lines bewteen each output to make it more readable
-- Added Error Handling (WARNING): Output file does not end with .pdf, verify with user that's really what they want
-- Added Error Handling (WARNING): Output file name matches a file in the output directory
-- Added Error Handling (ERROR): Unsafe input & output file names
-- Added a version check argument
-
-### MAY 11th, 2018 - v1.0 Released - Birth
-
-- The birth of cPDF!
 
 ## Disclaimer
 
 This application is maintained by volunteers and in no way do the maintainers make any guarantees. Please use at your own risk!
+
 
 ## Recognition
 
@@ -202,6 +144,7 @@ This is an Open Source utility sponsored by 3DF Limited's Open Source Initiative
 
 https://osi.3df.io
 https://www.3df.com.hk
+
 
 ## Want a graphical alternative instead?
 

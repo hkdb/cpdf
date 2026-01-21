@@ -1,0 +1,15 @@
+*.swp
+*.swo
+.env
+.env.*
+venv/
+.claude/
+.crush/
+
+# Build artifacts
+dist/
+*.build/
+*.onefile-build/
+nuitka-crash-report.xml
+__pycache__/
+*.pyc

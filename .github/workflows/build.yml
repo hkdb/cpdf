@@ -230,36 +230,8 @@ jobs:
           name: cpdf-freebsd-x86_64
           path: dist/cpdf
 
-  build-freebsd-arm64:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Build on FreeBSD ARM64
-        uses: vmactions/freebsd-vm@v1
-        with:
-          usesh: true
-          arch: arm64
-          prepare: |
-            pkg install -y python311 py311-pip patchelf
-          run: |
-            python3.11 -m pip install --user --break-system-packages nuitka pyprind
-            python3.11 -m nuitka \
-              --onefile \
-              --output-dir=dist \
-              --output-filename=cpdf \
-              --assume-yes-for-downloads \
-              cpdf
-
-      - name: Upload artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: cpdf-freebsd-arm64
-          path: dist/cpdf
-
   release:
-    needs: [build-linux-x86_64, build-linux-arm64, build-windows-x86_64, build-windows-arm64, build-macos-intel, build-macos-arm, build-freebsd-x86_64, build-freebsd-arm64]
+    needs: [build-linux-x86_64, build-linux-arm64, build-windows-x86_64, build-windows-arm64, build-macos-intel, build-macos-arm, build-freebsd-x86_64]
     runs-on: ubuntu-latest
     if: startsWith(github.ref, 'refs/tags/')
     steps:
@@ -281,7 +253,6 @@ jobs:
           cp artifacts/cpdf-macos-x86_64/cpdf release/cpdf-macos-x86_64
           cp artifacts/cpdf-macos-arm64/cpdf release/cpdf-macos-arm64
           cp artifacts/cpdf-freebsd-x86_64/cpdf release/cpdf-freebsd-x86_64
-          cp artifacts/cpdf-freebsd-arm64/cpdf release/cpdf-freebsd-arm64
           cp install.sh release/install.sh
           cp install.bat release/install.bat
 

@@ -125,6 +125,13 @@ detect_platform() {
       ;;
   esac
 
+  # Check for unsupported platform
+  if [[ "$OS" == "freebsd" && "$ARCH" == "arm64" ]]; then
+    echo -e "${RED}❌️ FreeBSD ARM64 binary is not available.${NC}"
+    echo -e "${YELLOW}Please build from source: https://github.com/hkdb/cpdf${NC}\n"
+    return 1
+  fi
+
   echo -e "📋️ Detected platform: ${OS}-${ARCH}\n"
   return 0
 }

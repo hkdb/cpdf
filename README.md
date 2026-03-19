@@ -110,14 +110,36 @@ Questionable Conditions that the application will verify with User via A Dialog 
 
 ## Installation
 
-Linux / Mac / FreeBSD:
+### Linux / Mac / FreeBSD:
+
+Installing Ghostscript (Dependency) on Linux
+```bash
+sudo apt-get update
+sudo apt-get install ghostscript
+```
+
+Installing Ghostscript (Dependency) on Mac
+
+```bash
+brew install ghostscript
+```
+
+Install cpdf on Linux / Mac / FreeBSD:
 
 ```bash
 curl -sL https://github.com/hkdb/cpdf/releases/latest/download/install.sh | bash
 ```
 You will still have to manually ensure `~/.local/bin` is in $PATH
 
-Windows:
+### Windows:
+
+Installing Ghostscript (Dependency) on Windows
+- Download: Go to the [Ghostscript downloads page](https://www.ghostscript.com/releases/gsdnld.html) and download the 32-bit or 64-bit self-extracting executable (gs###w64.exe).
+- Run Installer: Double-click the downloaded file and follow the on-screen instructions.
+- Default Path: The default installation directory is typically C:\Program Files\gs\gs###.
+- Verification: Open Command Prompt and type gswin64c (or gswin32c) to verify installation.
+
+Install cpdf on Windows:
 
 ```powershell
 Invoke-WebRequest -Uri "https://github.com/hkdb/cpdf/releases/latest/download/install.bat" -OutFile "install.bat"; .\install.bat
